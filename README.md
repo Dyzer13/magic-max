@@ -1,1 +1,2 @@
-# magic-max
+# Aarabic-bot
+discordyou23
