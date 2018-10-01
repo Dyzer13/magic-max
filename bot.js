@@ -30,7 +30,7 @@ client.on('message', message => {
 
 
 client.on('ready', () => {                           
-client.user.setGame(`s.help |s.invite |s.support`,'https://www.twitch.tv/fofodiscord');                                                                                                                                                                                                                                                                                                                                                                                                                            
+client.user.setGame(`s.help |s.support`,'https://www.twitch.tv/fofodiscord');                                                                                                                                                                                                                                                                                                                                                                                                                            
 });
 
 
@@ -247,7 +247,7 @@ client.on("message", message => {
 
 
 client.on("message", message => {
- if (message.content === "=help-games") {
+ if (message.content === "s.help-games") {
   const embed = new Discord.RichEmbed()
       .setColor("RANDOM")
       .setDescription('👑اوامر الألعاب👑')
@@ -273,19 +273,7 @@ client.on("message", message => {
 });
 
 
-   client.on('message', message => {
-	   if(message.content.startsWith(`${prefix}invite`)){
-		   if(!message.channel.guild) return message.channel.send("This Command is Just For Servers!")
-		   var embed = new Discord.RichEmbed()
-		   .setTitle(">> ClickHere To Add" + `${client.user.username}` + " <<")
-		   .setURL("https://discordapp.com/oauth2/authorize?client_id=" + `${client.user.id}` + "&scope=bot&permissions=8")
-		   .setTimestamp()
-		   .setFooter(`Requested By | ${message.author.username}`)
-		   .setColor("RANDOM")
-		   message.channel.send(":white_check_mark: | Check Your DM! تم الأرسال بلخاص")
-		   message.author.send({embed})
-	   }
-   });
+
 
 
 
@@ -296,13 +284,13 @@ client.on("message", message => {
   const embed = new Discord.RichEmbed()
       .setColor("RANDOM")
       .setDescription(`
-─════════════ {✯BomBot♧✯} ════════════─
+─════════════ {✯Welcome♧✯} ════════════─
 ❖-|welcome|🚩لتفعيل أمر الترحيب أنشاء غرفة أسمها welcome🚩
 ❖-|welcomeleft|🚩لتفيل امر المغادرة أنشاء غرفة أسمها welcome🚩
 ❖-|warn|🚩لتفعيل أمر الأنذار أنشأ غرفة أسمها warns🚩
 ❖-|suggest|🚩لتفعيل الريبورت أنشاء غرفة أسمها suggestions🚩
 ❖-|log|🚩لوق لحماية سيرفرك من تهكير اذا حد طرد شخص يظهر لك مين هو وأشياذ كثيرة🚩
-─════════════ {✯BomBot♧✯} ════════════─
+─════════════ {✯Welcome♧✯} ════════════─
       `)
    message.channel.sendEmbed(embed)
     }
@@ -734,7 +722,47 @@ client.on('message', async message => {
   }
 });
 
+client.on('message', message => {
+  if(!message.channel.guild) return;
+if(message.content.startsWith('s.msgserver')) {
+if(!message.channel.guild) return message.channel.send('**هذا الأمر فقط للسيرفرات**').then(m => m.delete(5000));
+	 if (message.author.id !== '444217577439232010') return message.reply('** هذا الأمر قفط لصاحب البوت و شكراًً **')
+ if(!message.author.id === '444217577439232010') return;
+let args = message.content.split(" ").join(" ").slice(2 + prefix.length);
+let copy = "BoardCast";
+let request = `Requested By ${message.author.username}`;
+if (!args) return message.reply('**يجب عليك كتابة كلمة او جملة لإرسال البرودكاست**');message.channel.send(`**هل أنت متأكد من إرسالك البرودكاست؟ \nمحتوى البرودكاست:** \` ${args}\``).then(msg => {
+msg.react('✅')
+.then(() => msg.react('❌'))
+.then(() =>msg.react('✅'))
 
+let reaction1Filter = (reaction, user) => reaction.emoji.name === '✅' && user.id === message.author.id;
+let reaction2Filter = (reaction, user) => reaction.emoji.name === '❌' && user.id === message.author.id;
+let reaction1 = msg.createReactionCollector(reaction1Filter, { time: 12000 });
+let reaction2 = msg.createReactionCollector(reaction2Filter, { time: 12000 });
+reaction1.on("collect", r => {
+message.channel.send(`☑ | Done ... The Broadcast Message Has Been Sent For ${message.guild.members.size} Members`).then(m => m.delete(5000));
+message.guild.members.forEach(m => {
+var bc = new
+Discord.RichEmbed()
+.setColor('RANDOM')
+.setTitle('برودكاست')
+.addField('🚩السيرفر🚩', message.guild.name)
+.addField('🔰المرسل🔰', message.author.username)
+.addField('👑الرسالة👑', args)
+.setThumbnail(message.author.avatarURL)
+.setFooter(copy, client.user.avatarURL);
+m.send({ embed: bc })
+msg.delete();
+})
+})
+reaction2.on("collect", r => {
+message.channel.send(`**Broadcast Canceled.**`).then(m => m.delete(5000));
+msg.delete();
+})
+})
+}
+});
 
 
 client.on('message', message => {
@@ -743,7 +771,7 @@ if(message.content.startsWith('s.msgserver')) {
 if(!message.channel.guild) return message.channel.send('**هذا الأمر فقط للسيرفرات**').then(m => m.delete(5000));
 if(!message.member.hasPermission('ADMINISTRATOR')) return      message.channel.send('**للأسف لا تمتلك صلاحية** `ADMINISTRATOR`' );
 let args = message.content.split(" ").join(" ").slice(2 + prefix.length);
-let copy = "Saz Bot";
+let copy = "BoardCast";
 let request = `Requested By ${message.author.username}`;
 if (!args) return message.reply('**يجب عليك كتابة كلمة او جملة لإرسال البرودكاست**');message.channel.send(`**هل أنت متأكد من إرسالك البرودكاست؟ \nمحتوى البرودكاست:** \` ${args}\``).then(msg => {
 msg.react('✅')
@@ -1256,7 +1284,7 @@ client.on('message', message => {
             .setAuthor(client.user.username,client.user.avatarURL)
             .setThumbnail(client.user.avatarURL)
             .setColor('RANDOM')
-            .setTitle('``INFO  Saz Bot`` ')
+            .setTitle('``INFO  Bot`` ')
             .addField('``My Ping``' , [`${Date.now() - message.createdTimestamp}` + 'MS'], true)
             .addField('``servers``', [client.guilds.size], true)
             .addField('``channels``' , `[ ${client.channels.size} ]` , true)
@@ -1265,7 +1293,7 @@ client.on('message', message => {
             .addField('``My ID``' , `[ ${client.user.id} ]` , true)
                   .addField('``My Prefix``' , `=` , true)
                   .addField('``My Language``' , `[ Java Script ]` , true)
-                  .setFooter('By |@Saz#0977')
+                  .setFooter('By |@Saz and @MaX ')
     })
 }
 });
@@ -1391,21 +1419,21 @@ client.on("message", message => {
 
 👑Commands BomBot♧|أوامر البوت الأسطورية👑
 
-─════════════ {✯BomBot✯} ════════════─
-❧ =help-admin ➺ 🔰اوامر الادارة🔰
+─════════════ {✯Bot Help✯} ════════════─
+❧ s.help-admin ➺ 🔰اوامر الادارة🔰
 
-❧ =help-public ➺ 👑اوامر العامة👑
+❧ s.help-public ➺ 👑اوامر العامة👑
 
-❧ =help-games ➺ 🎮اوامر الالعاب🎮
+❧ s.help-games ➺ 🎮اوامر الالعاب🎮
 
-❧ =help-music ➺ 🎵اوامر الاغاني🎶
+❧ s.help-music ➺ 🎵اوامر الاغاني🎶
 
-❧ =help-welcome ➺ 👋معلومات الترحيب في البوت👋
+❧ s.help-welcome ➺ 👋معلومات الترحيب في البوت👋
 
-❧ =help-color ➺ ✏أوامر الألوان🎉
+❧ s.help-color ➺ ✏أوامر الألوان🎉
 
-❧ =help-use ➺🚩للمزيد من المعلومات للبوت🚩
-─════════════ {✯BomBot✯} ════════════─
+❧ s.help-use ➺🚩للمزيد من المعلومات للبوت🚩
+─════════════ {✯Bot Help✯} ════════════─
       `)
    message.channel.sendEmbed(embed)
 
@@ -1522,7 +1550,7 @@ client.on('message', async msg => { // eslint-disable-line
 			        .setDescription(`**الرجآء من حضرتك إختيآر رقم المقطع** :
 ${videos.map(video2 => `[**${++index} **] \`${video2.title}\``).join('\n')}`)
 //by ,$ ReBeL ء , 🔕#4777 'CODES SERVER'
-					.setFooter("BomBot")
+					.setFooter(":iphone: ")
 					msg.channel.sendEmbed(embed1).then(message =>{message.delete(20000)})
 
 					// eslint-disable-next-line max-depth
@@ -1677,15 +1705,15 @@ client.on("message", message => {
   const embed = new Discord.RichEmbed()
       .setColor("RANDOM")
       .setDescription('👑أوامر الموسيقى👑')
-	  .addField('❖-|=play', `🎸لتشغيل أغنية برآبط أو بأسم🎵`)
-	  .addField('❖-|=skip', `♠لتجآوز الأغنية الحآلية🎺`)
-	  .addField('❖-|=pause', `🚩إيقآف الأغنية مؤقتا💯`)
-	  .addField('❖-|=resume', `🎧لموآصلة الإغنية بعد إيقآفهآ مؤقتا🎵`)
-          .addField('❖-|=vol', `🔊تغيير درجة الصوت 100 - 0🔇`)
-          .addField('❖-|=stop', `🔘لإخرآج البوت من الروم❗`)
-          .addField('❖-|=nb', `🎼لمعرفة الأغنية المشغلة حآليا🎷`)
-          .addField('❖-|=queue', `🎸لمعرفة قآئمة التشغيل🎤`)
-          .addField('❖-|=music', `🔰لأرسال الأوامر بلشات🔰`)
+	  .addField('❖-|s.play', `🎸لتشغيل أغنية برآبط أو بأسم🎵`)
+	  .addField('❖-|s.skip', `♠لتجآوز الأغنية الحآلية🎺`)
+	  .addField('❖-|s.pause', `🚩إيقآف الأغنية مؤقتا💯`)
+	  .addField('❖-|s.resume', `🎧لموآصلة الإغنية بعد إيقآفهآ مؤقتا🎵`)
+          .addField('❖-|s.vol', `🔊تغيير درجة الصوت 100 - 0🔇`)
+          .addField('❖-|s.stop', `🔘لإخرآج البوت من الروم❗`)
+          .addField('❖-|s.nb', `🎼لمعرفة الأغنية المشغلة حآليا🎷`)
+          .addField('❖-|s.queue', `🎸لمعرفة قآئمة التشغيل🎤`)
+          .addField('❖-|s.music', `🔰لأرسال الأوامر بلشات🔰`)
   message.author.send({embed});
       message.channel.send(":white_check_mark: | Check Your DM تم الأرسال بلخاص")
 
@@ -2792,194 +2820,7 @@ if(message.content === prefix + "roomsall"){
 
 
 		
-client.on('message', message => {
-    
-if(message.content.split(' ')[0] == prefix + 'id') {
-if(!message.channel.guild) return;
 
-let args = message.content.split(' ').slice(1).join(' ');
-
-       let defineduser = '';
-       if (!args[1]) { 
-           defineduser = message.author;
-       } else { // Run this if they did define someone...
-           let firstMentioned = message.mentions.users.first();
-           defineduser = firstMentioned;
-       }
-
-       const w = ['./id5.png','./id6.png'];
-       var Canvas = require('canvas')
-var jimp = require('jimp')
-
-        const millis = new Date().getTime() - defineduser.createdAt.getTime();
-const now = new Date();
-dateFormat(now, 'dddd, mmmm dS, yyyy');
-const stats2 = ['online', 'Low', 'Medium', 'Insane'];
-const days = millis / 1000 / 60 / 60 / 24;
-         dateFormat(now, 'dddd, mmmm dS, yyyy');
-             let time = `${dateFormat(defineduser.createdAt)}`
-             var heg;
-             if(men) {
-                 heg = men
-             } else {
-                 heg = message.author
-             }
-            var mentionned = message.mentions.members.first();
-              var h;
-             if(mentionned) {
-                 h = mentionned
-             } else {
-                 h = message.member
-             }
-       let Image = Canvas.Image,
-           canvas = new Canvas(300, 300),
-           ctx = canvas.getContext('2d');
-       ctx.patternQuality = 'bilinear';
-       ctx.filter = 'bilinear';
-       ctx.antialias = 'subpixel';
- 
-       fs.readFile(`${w[Math.floor(Math.random() * w.length)]}`, function (err, Background) {
-           if (err) return console.log(err);
-           let BG = Canvas.Image;
-           let ground = new Image;
-           ground.src = Background;
-           ctx.drawImage(ground, 0, 0, 300, 300);
-
-})
-  var mentionned = message.mentions.users.first();
-
-   var client;
-     if(mentionned){
-         var client = mentionned;
-     } else {
-         var client = message.author;
-         
-     }
-
-var men = message.mentions.users.first();
-           var heg;
-           if(men) {
-               heg = men
-           } else {
-               heg = message.author
-           }
-               let url = defineduser.displayAvatarURL.endsWith(".webp") ? defineduser.displayAvatarURL.slice(20, 20) + ".png" : defineduser.displayAvatarURL;
-               jimp.read(url, (err, ava) => {
-                   if (err) return console.log(err);
-                   ava.getBuffer(jimp.MIME_PNG, (err, buf) => {
-                       if (err) return console.log(err);
-
-                       let Avatar = Canvas.Image;
-                       let ava = new Avatar;
-                       ava.src = buf;
-                       ctx.drawImage(ava, 112 , 40, 75, 75);
-                       
-                       
-                       
-                       
-                       var status;
-   if (defineduser.presence.status === 'online') {
-       status = 'ONLINE';
-ctx.fillStyle = `#2ce032`;
-ctx.beginPath();
-ctx.arc(179, 107, 10, 0, Math.PI*2, true); 
-ctx.closePath();
-ctx.fill();
- 
-   } else if (defineduser.presence.status === 'dnd') {
-       status = 'DND';
-       ctx.fillStyle = `#ff0000`;
-ctx.beginPath();
-ctx.arc(179, 107, 8, 0, Math.PI*2, true); 
-ctx.closePath();
-ctx.fill();
-   } else if (defineduser.presence.status === 'idle') {
-       status = 'IDLE';
-       ctx.fillStyle = `#f4d32e`;
-ctx.beginPath();
-ctx.arc(179, 107, 10, 0, Math.PI*2, true); 
-ctx.closePath();
-ctx.fill();
-   } else if (defineduser.presence.status === 'offline') {
-       status = 'INVISIABLE';
-       ctx.fillStyle = `#898988`;
-ctx.beginPath();
-ctx.arc(179, 107, 10, 0, Math.PI*2, true); 
-ctx.closePath();
-ctx.fill();
-   }
-                       
-                       
-                                             var time2;
-     if(mentionned){
-         var time2 = `${dateFormat(message.mentions.users.first.joinedAt)}`;
-     } else {
-         var time2 = `${dateFormat(message.member.joinedAt)}`;
-         
-     }  
-                          
-   
-                       ctx.font = 'Bold 15px Arial ';
-                       ctx.fontSize = '15px';
-                       ctx.fillStyle = "#ffffff";
-                       ctx.textAlign = "center";
-                       ctx.fillText(status, 70 , 108 );
-                       
-                        ctx.font = 'Bold 13px Arial';
-                       ctx.fontSize = '13px';
-                       ctx.fillStyle = "#ffffff";
-                       ctx.textAlign = "center";
-                       ctx.fillText(`${message.author.presence.game === null ? "No Status" : message.author.presence.game.name}`, 150.00   , 180  );
-
-                      
-                       ctx.font = 'Bold 20px Arial ';
-                       ctx.fontSize = '15px';
-                       ctx.fillStyle = "#ffffff";
-                       ctx.textAlign = "center";
-                       ctx.fillText(`${defineduser.username}`, 150.50 , 140);
-
-
-                       ctx.font = 'Bold 15px Arial';
-                       ctx.fontSize = '15px';
-                       ctx.fillStyle = "#ffffff";
-                       ctx.textAlign = "center";
-                       ctx.fillText(`#${defineduser.discriminator}`, 227  , 108);
-
-                       var time2;
-     if(mentionned){
-         var time2 = `${dateFormat(message.mentions.users.first.joinedAt)}`;
-     } else {
-         var time2 = `${dateFormat(message.member.joinedAt)}`;
-         
-     }
-
-                       ctx.font = 'Bold 13px Arial ';
-                       ctx.fontSize = '13px';
-                       ctx.fillStyle = "#ffffff";
-                       ctx.textAlign = "center";
-                       ctx.fillText(`${moment(defineduser.createdTimestamp).fromNow()}`, 179 , 226 );
-                       
-                       
-    
-          
-                       ctx.font = 'Bold 13px Arial ';
-                       ctx.fontSize = '13px';
-                       ctx.fillStyle = "#ffffff";
-                       ctx.textAlign = "center";
-                       ctx.fillText(`${moment(h.joinedAt).format('YYYY/M/D HH:mm:ss')}`, 179 , 253);
-                       
-message.channel.sendFile(canvas.toBuffer())
-
-
-       })
-   })
-
-
-
-
-}
-
-})		
 		
 
 
@@ -3739,4 +3580,4 @@ message.channel.sendFile(canvas.toBuffer())
 
 
 
-client.login("NDk1OTg1NjYwNTk5OTkyMzMw.DpKFTA.7rCj9KzJw2HtrOiYayGmgPc6rQM");
+client.login("");
